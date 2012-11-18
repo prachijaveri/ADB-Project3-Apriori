@@ -13,6 +13,8 @@ public class Main
 			LinkedList<LinkedList<String>> all_transactions = InputOutput.readInput("IntegratedDataset.csv");
 			System.out.println("READING INPUT DONE");
 			Apriori.start(all_transactions,min_support, min_confidence);
+			System.out.println("APRIORI DONE");
+			System.out.println("------------------------------------------END-----------------------------------------------");
 		}
 		catch(Exception e)
 		{

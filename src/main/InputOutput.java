@@ -7,13 +7,7 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 
 public class InputOutput 
-{
-	public static void main(String arg[])throws Exception
-	
-	{
-		readInput("IntegratedDataset.csv");
-	}
-	
+{	
 	static String[] getItems(String line)
 	{
 		String result[] = line.split(",");
