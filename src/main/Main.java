@@ -14,6 +14,7 @@ public class Main
 			System.out.println("READING INPUT DONE");
 			Apriori.start(all_transactions,min_support, min_confidence);
 			System.out.println("APRIORI DONE");
+			Apriori.printAllItems();
 			System.out.println("------------------------------------------END-----------------------------------------------");
 		}
 		catch(Exception e)

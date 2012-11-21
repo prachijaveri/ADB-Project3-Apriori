@@ -10,7 +10,7 @@ public class Item
 	
 	Item(String name, int id)
 	{
-		item_name = name;
+		item_name = name.toLowerCase();
 		transaction_ids.add(id+"");
 		count++;
 	}
@@ -22,6 +22,17 @@ public class Item
 	
 	void addTransaction(int id)
 	{
-		transaction_ids.add(id+"");
+		if(! transaction_ids.contains(id+""))
+			transaction_ids.add(id+"");
+	}
+	
+	String getItemName()
+	{
+		return item_name;
+	}
+	
+	public String toString()
+	{
+		return item_name+"  "+count+"  "+transaction_ids.toString();
 	}
 }

@@ -14,15 +14,47 @@ public class Apriori
 	static boolean flag=true;
 //	static double min_support=0,min_confidence=0;
 	
+	static Item getItem(String item)
+	{
+		for(int j=0;j<list_of_items.size();j++)
+		{
+			if(list_of_items.get(j).getItemName().equalsIgnoreCase(item))
+			{
+				return list_of_items.get(j);
+			}
+		}
+		return null;
+	}
+	
+	static void printAllItems()
+	{
+		for(int j=0;j<list_of_items.size();j++)
+		{
+			System.out.println(list_of_items.get(j));
+		}
+	}
 	public static void start(LinkedList<LinkedList<String>>all_transactions, double min_support, double min_confidence)
 	{
+		//GETTING ALL ITEMS
 		transaction_count = all_transactions.size();
 		for(int i=0;i<transaction_count;i++)	
 		{
-			int items_size=all_transactions.get(i).size();
+			LinkedList<String> basket = all_transactions.get(i);
+			int items_size=basket.size();
 			for(int j=0; j<items_size; j++)
 			{
-				
+				String item_in_basket = basket.get(j);
+				Item item = getItem(item_in_basket);
+				if(item == null)
+				{
+					item = new Item(item_in_basket,(i+1));
+					list_of_items.add(item);
+				}
+				else
+				{
+					item.addTransaction((i+1));
+					item.increaseCount();
+				}
 			}
 		}
 //		System.out.println();
@@ -222,6 +254,5 @@ public class Apriori
 //		}
 //		con=con/cnt;
 //		return con;
-	}
-	
+	}	
 }
