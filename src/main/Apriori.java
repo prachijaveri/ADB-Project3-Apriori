@@ -1,7 +1,8 @@
 package main;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.Set;
 
 public class Apriori
 {
@@ -13,8 +14,9 @@ public class Apriori
 //	static Vector titem[];//list of all transactions
 	static boolean flag=true;
 //	static double min_support=0,min_confidence=0;
-	LinkedList<String> large_items = new LinkedList<String>();
-	Hashtable<LinkedList<String> , Double> candidate_items = new Hashtable<LinkedList<String> , Double>();
+	static LinkedList<LinkedList<String>> large_items = new LinkedList<LinkedList<String>>();
+	static Hashtable<LinkedList<String> , Double> candidate_items = new Hashtable<LinkedList<String> , Double>();
+	static Hashtable<LinkedList<String> , Double> large_items_for_rules = new Hashtable<LinkedList<String> , Double>(); 
 	
 	static Item getItem(String item)
 	{
@@ -36,11 +38,63 @@ public class Apriori
 		}
 	}
 	
+	static void getLargeItems(double min_support)
+	{
+		large_items = new LinkedList<LinkedList<String>>();
+		Set<LinkedList<String>> keys = candidate_items.keySet();
+		Iterator iterator = keys.iterator();
+		while(iterator.hasNext())
+		{
+			LinkedList<String> l = (LinkedList<String>) iterator.next();
+			if(candidate_items.get(l) >= min_support)
+			{
+				large_items_for_rules.put(l,candidate_items.get(l));
+				large_items.add(l);
+			}
+		}
+//		System.out.println(large_items);
+//		System.out.println(large_items_for_rules);
+	}
+	
+	static boolean checkSubSets(LinkedList<String> l, String item)
+	{
+		for(int i=0 ; i < l.size()/2 +1 ; i++)
+		{
+			for(int j=0;j<)
+		}
+		return false;
+	}
+	
+	static LinkedList<String> combine(LinkedList<String> l , LinkedList<String> m)
+	{
+		for(int i =0;i<m.size();i++)
+		{
+			String item = m.get(i);
+			if( checkSubSets(l,item))
+				return null;
+			if(!l.contains(m) &&)
+		}
+	}
+	
+	static void getCandidateItems(double min_support)
+	{
+		candidate_items = new Hashtable<LinkedList<String>,Double>();
+		for(int i = 0;i<large_items.size()-1;i++)
+		{
+			for(int j = i+1;j<large_items.size();j++)
+			{
+				LinkedList<String> l = combine(large_items.get(i),large_items.get(j));
+			}
+		}
+	}
+	
+	
+	
 	public static void start(LinkedList<LinkedList<String>>all_transactions, double min_support, double min_confidence)
 	{
 		//GETTING ALL ITEMS
 		transaction_count = all_transactions.size();
-		System.out.println(transaction_count);
+//		System.out.println(transaction_count);
 		for(int i=0;i<transaction_count;i++)	
 		{
 			LinkedList<String> basket = all_transactions.get(i);
@@ -62,108 +116,25 @@ public class Apriori
 				}
 			}
 		}
-//		System.out.println();
-//		for(int i=0;i<item.size();i++)
-//		{
-//			if((Double.parseDouble(sup.elementAt(i)+"")) < min_support)
+		
+		for(int i=0; i<list_of_items.size();i++)
+		{
+			Item item = list_of_items.get(i);
+			item.calculateSupport(transaction_count);  
+//			if(item.getSupport() >= min_support)
 //			{
-//				item.removeElementAt(i);
-//				sup.removeElementAt(i);
-//				i--;
+				LinkedList<String> l = new LinkedList<String>();
+				l.add(item.getItemName());
+				candidate_items.put(l,item.getSupport());
 //			}
-//		}
-//		System.out.println("SCAN "+(count++));
-//		System.out.println("ItemSet\tSupport");
-//		for(int i=0;i<item.size();i++)
-//		{
-//			System.out.println(item.elementAt(i)+"\t\t"+sup.elementAt(i));
-//		}
-//		System.out.println();
-//		while(flag)
-//		{
-//				System.out.println("SCAN "+(count++));
-//			getCandidate();
-//		}
-//		
-//		//ASSOCIATION RULES CALCULATION
-//		Vector rule=new Vector();
-//		Vector conf=new Vector();
-//		System.out.println();
-//		for(int i=0;i<item.size();i++)
-//		{
-//			String a=item.elementAt(i)+"";
-//			String b[]=a.split(",");
-//			for(int j=1;j<b.length;j++)
-//			{
-//				for(int k=0;k<b.length;k++)
-//				{
-//					String l="",r="";
-//					for(int s=0;s<j;s++)
-//					{
-//						l=l+" ^ "+b[(s+k)%b.length];
-//					}
-//					for(int p=j;p<b.length;p++)
-//					{
-//						r=r+" ^ "+b[(p+k)%b.length];
-//					}
-//					String x=l.substring(3,l.length())+" => "+r.substring(3,r.length());
-//					rule.add(x);
-//					double y=getConfidence(x,i);
-//					conf.add(y);
-//				}
-//			}
-//		}
-//		System.out.println("RULES");
-//		for(int i=0;i<rule.size();i++)
-//		{
-//			double d=Double.parseDouble(conf.elementAt(i)+"");
-//			System.out.println(rule.elementAt(i)+"\t"+d+"\t"+(d*100));
-//			if((d*100)<min_confidence)
-//			{
-//				rule.removeElementAt(i);
-//				conf.removeElementAt(i);
-//				i--;
-//			}
-//		}
-//		System.out.println();
-//		System.out.println("STRONG RULES");
-//		for(int i=0;i<rule.size();i++)
-//		{
-//			double d=Double.parseDouble(conf.elementAt(i)+"");
-//			System.out.println(rule.elementAt(i)+"\t"+d+"\t"+(d*100));	
-//		}
-//	}
-//	
-//	static boolean has(Vector newitem,String x)
-//	{
-//		if(newitem.contains(x))
-//			return true;
-//		if(newitem.isEmpty())
-//			return false;
-//		
-//		boolean f=true;
-//		boolean fin=false;
-//		for(int i=0;i<newitem.size();i++)
-//		{
-//			String y=newitem.elementAt(i)+"";
-//			String x1[]=x.split(",");
-//			f=true;
-//			if(y.length()!= x.length())
-//				f=false;
-//			for(int j=0;j<x1.length;j++)
-//			{
-//				
-//				if(y.indexOf(x1[j]) < 0)
-//				{
-//					f=false;
-//					break;
-//				}
-//			}
-//			fin=fin || f;
-//		}
-//		return fin;
-//	}
-//	
+		}
+		
+		getLargeItems(min_support);
+		getCandidateItems(min_support);
+		
+//		System.out.println(candidate_items);
+
+	
 //	static void getCandidate()
 //	{
 //		Vector newitem=new Vector();
