@@ -11,9 +11,9 @@ public class Main
 			double min_support = Double.parseDouble(arg[0]);
 			double min_confidence  = Double.parseDouble(arg[1]);
 			LinkedList<LinkedList<String>> all_transactions = InputOutput.readInput("IntegratedDataset.csv");
-			System.out.println("READING INPUT DONE");
+//			System.out.println("READING INPUT DONE");
 			Apriori.start(all_transactions,min_support, min_confidence);
-			System.out.println("APRIORI DONE");
+//			System.out.println("APRIORI DONE");
 //			Apriori.printAllItems();
 //			LinkedList<String> l =new LinkedList<String>();
 //			l.add("a");
