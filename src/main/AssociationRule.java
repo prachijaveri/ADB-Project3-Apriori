@@ -29,5 +29,4 @@ public class AssociationRule
 	{
 		return left +" ---> " + right +"\nSupport : "+support+"\nConfidence : "+confidence;
 	}
-
 }

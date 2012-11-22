@@ -6,7 +6,8 @@ public class Item
 {
 	String item_name ="";
 	LinkedList<String> transaction_ids = new LinkedList<String>();
-	int count = 0;
+	double count = 0.0;
+	double support =0.0;
 	
 	Item(String name, int id)
 	{
@@ -31,6 +32,21 @@ public class Item
 		return item_name;
 	}
 	
+	void calculateSupport(double n)
+	{
+		support = count / n;
+	}
+	
+	double getSupport()
+	{
+		return support;
+	}
+	
+	double getCount()
+	{
+		return count;
+	}
+
 	public String toString()
 	{
 		return item_name+"  "+count+"  "+transaction_ids.toString();
