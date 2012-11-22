@@ -18,7 +18,6 @@ public class Apriori
 	static Hashtable<LinkedList<String> , Double> candidate_items = new Hashtable<LinkedList<String> , Double>();
 	static Hashtable<LinkedList<String> , Double> large_items_for_rules = new Hashtable<LinkedList<String> , Double>(); 
 	static int iteration_number =1;
-	
 	static Item getItem(String item)
 	{
 		for(int j=0;j<list_of_items.size();j++)
@@ -219,6 +218,7 @@ public class Apriori
 	{
 //		int size = 1;
 //		GETTING ALL ITEMS
+
 		transaction_count = all_transactions.size();
 		System.out.println(transaction_count);
 		for(int i=0;i<transaction_count;i++)	
@@ -254,6 +254,7 @@ public class Apriori
 				candidate_items.put(l,item.getSupport());
 //			}
 		}
+
 		System.out.println("------------------------------ "+iteration_number+" -------------------------------");
 		System.out.println(candidate_items);
 		getLargeItems(min_support);
