@@ -29,7 +29,7 @@ public class Main
 //			l.add("k");
 //			l.add("l");
 //			l.add("m");
-//			l.add("n");
+//			l.add("e");
 //			System.out.println(l);
 //			System.out.println();
 //			Apriori.getSubsets(l, 5);

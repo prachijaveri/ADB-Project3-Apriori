@@ -17,7 +17,7 @@ public class Apriori
 	static LinkedList<LinkedList<String>> large_items = new LinkedList<LinkedList<String>>();
 	static Hashtable<LinkedList<String> , Double> candidate_items = new Hashtable<LinkedList<String> , Double>();
 	static Hashtable<LinkedList<String> , Double> large_items_for_rules = new Hashtable<LinkedList<String> , Double>(); 
-	
+	static int iteration_number =1;
 	static Item getItem(String item)
 	{
 		for(int j=0;j<list_of_items.size();j++)
@@ -42,7 +42,7 @@ public class Apriori
 	{
 		large_items = new LinkedList<LinkedList<String>>();
 		Set<LinkedList<String>> keys = candidate_items.keySet();
-		Iterator iterator = keys.iterator();
+		Iterator<LinkedList<String>> iterator = keys.iterator();
 		while(iterator.hasNext())
 		{
 			LinkedList<String> l = (LinkedList<String>) iterator.next();
@@ -58,6 +58,7 @@ public class Apriori
 	
 	static boolean contains(LinkedList<LinkedList<String>> all_subsets, LinkedList<String> subset)
 	{
+//		System.out.println("CONTAINS");
 		for(int i=0;i<all_subsets.size();i++)
 		{
 			LinkedList<String> l =all_subsets.get(i);
@@ -70,13 +71,20 @@ public class Apriori
 						flag = false;
 				}
 				if(flag)
+				{
+//					System.out.println("CONTAINS DONE");
 					return flag;
+				}
 			}
 		}
+//		System.out.println("CONTAINS DONE");
 		return false;
 	}
 	static LinkedList<LinkedList<String>> getSubsets(LinkedList<String> l ,int set_size)
 	{
+//		System.out.println("SUBSET");
+//		System.out.println(set_size);
+//		System.out.println(l);
 		LinkedList<LinkedList<String>> all_subsets = new LinkedList<LinkedList<String>>();
 		int n = (l.size()-set_size+1);
 		for(int i=0;i<n;i++)
@@ -94,18 +102,43 @@ public class Apriori
 					all_subsets.add(subset);
 			}
 		}
-		System.out.println(all_subsets);
+//		System.out.println(all_subsets);
+//		System.out.println("SUBSET DONE");
 		return all_subsets;
 	}
 	
+	static boolean isLargeItem(LinkedList<String> a)
+	{
+		Set<LinkedList<String>> large_item_set = large_items_for_rules.keySet();
+		Iterator<LinkedList<String>> i = large_item_set.iterator();
+		while(i.hasNext())
+		{
+			LinkedList<String> b =(LinkedList<String>) i.next();
+			flag = true;
+			for(int j=0;j<a.size();j++)
+			{
+				if(! b.contains(a.get(j)))
+					flag=false;
+			}
+			if(flag)
+				return true;
+		}
+		return false;
+	}
 	static boolean checkSubsets(LinkedList<String> l, String item)
 	{
-		for(int i=0 ; i < l.size()/2 +1 ; i++)
+//		System.out.println("CHECK WATEVER");
+		
+		for(int i=1 ; i < l.size() ; i++)
 		{
 			LinkedList<LinkedList<String>> subsets = getSubsets(l,i);
-			for(int j=0;j<l.size();j++)
+			System.out.println(i+"   "+subsets);
+//			System.out.println()
+			for(int j=0;j<subsets.size();j++)
 			{
-				
+				subsets.get(j).add(item);
+				if(!isLargeItem(subsets.get(i)) && subsets.get(i).contains(item))
+					return true;
 			}
 		}
 		return false;
@@ -113,27 +146,68 @@ public class Apriori
 	
 	static LinkedList<String> combine(LinkedList<String> l , LinkedList<String> m)
 	{
+		LinkedList<String> combine_list = new LinkedList<String>();
+		for(int i=0;i<l.size();i++)
+			combine_list.add(l.get(i));
+		System.out.println("\nCOMBINING  ");
+		System.out.println(l);
+		System.out.println(m);
+//		System.out.println("COMBINE WATEVER");
 		for(int i =0;i<m.size();i++)
 		{
 			String item = m.get(i);
-			if( checkSubsets(l,item))
+			if(checkSubsets(l,item))
 				return null;
-			if(!l.contains(m))
+			if(!combine_list.contains(item))
 			{
-				
+				combine_list.add(item);
 			}
 		}
-		return l;
+		System.out.println(combine_list);
+		return combine_list;
 	}
 	
-	static void getCandidateItems(double min_support)
+	static double getSupport(LinkedList<String> l)
 	{
+		System.out.println("\n\nSUPPORT FOR " + l);
+		double support = 0.0;
+		LinkedList<String> transactions = getItem(l.get(0)).getTransactionIds();
+		System.out.println(transactions);
+		for(int i=1;i<l.size();i++)
+		{
+			LinkedList<String> t = getItem(l.get(i)).getTransactionIds();
+			System.out.println("\t"+t);
+			for(int j =0 ;j<transactions.size();j++)
+			{
+				if(! t.contains(transactions.get(j)))
+				{
+					transactions.remove(j);
+					j--;
+				}
+			}
+		}
+		System.out.println(transactions);
+		support = ((double)transactions.size()) / transaction_count;
+		System.out.println("SUPPORT DONE\n");
+		return support;
+	}
+	
+	static void getCandidateItems(double min_support,int size)
+	{
+//		System.out.println("WATEVER");
+//		System.out.println(large_items);
 		candidate_items = new Hashtable<LinkedList<String>,Double>();
 		for(int i = 0;i<large_items.size()-1;i++)
 		{
 			for(int j = i+1;j<large_items.size();j++)
 			{
-				LinkedList<String> l = combine(large_items.get(i),large_items.get(j));
+				LinkedList<String> z = combine(large_items.get(i),large_items.get(j));
+				if(z != null)
+				{
+					double support = getSupport(z);
+					if(z.size() == size)
+						candidate_items.put(z,support);
+				}
 			}
 		}
 	}
@@ -142,9 +216,10 @@ public class Apriori
 	
 	public static void start(LinkedList<LinkedList<String>>all_transactions, double min_support, double min_confidence)
 	{
+//		int size = 1;
 		//GETTING ALL ITEMS
 		transaction_count = all_transactions.size();
-//		System.out.println(transaction_count);
+		System.out.println(transaction_count);
 		for(int i=0;i<transaction_count;i++)	
 		{
 			LinkedList<String> basket = all_transactions.get(i);
@@ -179,106 +254,27 @@ public class Apriori
 //			}
 		}
 		
-		getLargeItems(min_support);
-		getCandidateItems(min_support);
-		
-//		System.out.println(candidate_items);
-
+		printAllItems();
+		do
+		{
+			System.out.println("------------------------------ "+iteration_number+" -------------------------------");
+			getCandidateItems(min_support,iteration_number);
+			System.out.println("C  "+candidate_items);
+			getLargeItems(min_support);
+			System.out.println("L  "+large_items);
+			iteration_number++;
+		}while(checkAllConditions());
+	}	
 	
-//	static void getCandidate()
-//	{
-//		Vector newitem=new Vector();
-//		for(int i=0;i<item.size();i++)
-//		{
-//			for(int j=i+1;j<item.size();j++)
-//			{
-//				String x=item.elementAt(i)+"";
-//				String y=item.elementAt(j)+"";
-//				String z[]=y.split(",");
-//				for(int k=0;k<z.length;k++)
-//				{
-//					if(x.indexOf(z[k]) == -1)
-//						x=(x+","+z[k]);
-//				}
-//				if( !has(newitem,x))
-//				{
-//					newitem.add(x);
-//				}
-//			}
-//		}
-//	
-//		Vector newsup=getSupport(newitem);
-//		if(newitem.size() == item.size())
-//			flag=false;		
-//		for(int i=0;i<newitem.size();i++)
-//		{
-//			if((Double.parseDouble(newsup.elementAt(i)+"")) < min_support)
-//			{
-//				newitem.removeElementAt(i);
-//				newsup.removeElementAt(i);
-//				i--;
-//			}
-//		}
-//		if(newitem.size()<1)
-//			flag=false;
-//		else
-//		{
-//			item=new Vector();
-//			sup=new Vector();
-//			for(int i=0;i<newitem.size();i++)
-//			{
-//				item.add(newitem.elementAt(i));
-//				sup.add(newsup.elementAt(i));
-//			}
-//		}
-//		System.out.println("ItemSet\tSupport");
-//		for(int i=0;i<item.size();i++)
-//			System.out.println(item.elementAt(i)+"\t\t"+sup.elementAt(i));
-//		System.out.println();
-//	}
-//	
-//	static Vector getSupport(Vector newitem)
-//	{
-//		Vector newsup=new Vector();
-//		for(int i=0;i<newitem.size();i++)
-//		{
-//			String s=newitem.elementAt(i)+"";
-//			String r[]=s.split(",");
-//			boolean f;
-//			int cnt=0;
-//			for(int j=0;j<titem.length;j++ )
-//			{
-//				f=true;
-//				for(int k=0;k<r.length;k++)
-//					if(!titem[j].contains(r[k]))
-//						f=false;
-//				if(f)
-//					cnt++;
-//			}
-//			newsup.add(cnt);
-//		}
-//		return newsup;
-//	}
-//	
-//	static double getConfidence(String a,int index)
-//	{
-//		double con=Double.parseDouble(sup.elementAt(index)+"");
-//		String b[]=a.split(" => ");
-//		String c[]=b[0].split(" ");
-//		double cnt=0;
-//		boolean f1=true;
-//		for(int i=0;i<titem.length;i++)
-//		{
-//			f1=true;
-//			for(int j=0;j<c.length;j+=2)
-//			{
-//				if(! titem[i].contains(c[j]))
-//					f1=false;
-//			}
-//			if(f1)
-//				cnt++;
-//		}
-//		con=con/cnt;
-//		return con;
+	static boolean checkAllConditions()
+	{
+		if(list_of_items.size() <= iteration_number)
+			return false;
+		if(candidate_items.size() == 0)
+			return false;
+		if(large_items.size() == 0)
+			return false;
+		return true;
+	
 	}	
 }
