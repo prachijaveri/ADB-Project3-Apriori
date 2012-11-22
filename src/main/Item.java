@@ -27,6 +27,16 @@ public class Item
 			transaction_ids.add(id+"");
 	}
 	
+	LinkedList<String> getTransactionIds()
+	{
+		LinkedList<String> new_transaction_ids = new LinkedList<String>();
+		for(int i=0;i<transaction_ids.size();i++)
+		{
+			new_transaction_ids.add(transaction_ids.get(i));
+		}
+		return new_transaction_ids;
+	}
+	
 	String getItemName()
 	{
 		return item_name;
