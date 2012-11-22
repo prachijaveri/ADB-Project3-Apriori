@@ -11,10 +11,11 @@ public class InputOutput
 	static String[] getItems(String line)
 	{
 		String result[] = line.split(",");
+//		System.out.println(result.length);
 		for(int i=0;i<result.length;i++)
 		{
 			result[i]=result[i].trim().toLowerCase();
-			System.out.println(result[i]+"......");
+//			System.out.println(result[i]+"......");
 		}
 		return result;		
 	}
@@ -27,7 +28,8 @@ public class InputOutput
 		int i=0;
 		while ((line = br.readLine()) != null) 
 		{
-			System.out.println(line);
+			all_transactions.add(new LinkedList<String>());
+//			System.out.println(line);
 			String words[] = getItems(line);
 			for(String word : words)
 			{
@@ -36,6 +38,7 @@ public class InputOutput
 					all_transactions.get(i).add(word);
 				}
 			}
+			i++;
 		}
 		return all_transactions;
 	}

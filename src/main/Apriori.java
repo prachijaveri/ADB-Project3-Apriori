@@ -13,6 +13,8 @@ public class Apriori
 //	static Vector titem[];//list of all transactions
 	static boolean flag=true;
 //	static double min_support=0,min_confidence=0;
+	LinkedList<String> large_items = new LinkedList<String>();
+	Hashtable<LinkedList<String> , Double> candidate_items = new Hashtable<LinkedList<String> , Double>();
 	
 	static Item getItem(String item)
 	{
@@ -33,13 +35,16 @@ public class Apriori
 			System.out.println(list_of_items.get(j));
 		}
 	}
+	
 	public static void start(LinkedList<LinkedList<String>>all_transactions, double min_support, double min_confidence)
 	{
 		//GETTING ALL ITEMS
 		transaction_count = all_transactions.size();
+		System.out.println(transaction_count);
 		for(int i=0;i<transaction_count;i++)	
 		{
 			LinkedList<String> basket = all_transactions.get(i);
+//			System.out.println(basket);
 			int items_size=basket.size();
 			for(int j=0; j<items_size; j++)
 			{
