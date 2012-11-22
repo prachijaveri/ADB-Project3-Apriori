@@ -56,11 +56,57 @@ public class Apriori
 //		System.out.println(large_items_for_rules);
 	}
 	
-	static boolean checkSubSets(LinkedList<String> l, String item)
+	static boolean contains(LinkedList<LinkedList<String>> all_subsets, LinkedList<String> subset)
+	{
+		for(int i=0;i<all_subsets.size();i++)
+		{
+			LinkedList<String> l =all_subsets.get(i);
+			if(l.size() == subset.size())
+			{
+				boolean flag =true;
+				for(int j=0;j<subset.size();j++)
+				{
+					if(!l.contains(subset.get(j)))
+						flag = false;
+				}
+				if(flag)
+					return flag;
+			}
+		}
+		return false;
+	}
+	static LinkedList<LinkedList<String>> getSubsets(LinkedList<String> l ,int set_size)
+	{
+		LinkedList<LinkedList<String>> all_subsets = new LinkedList<LinkedList<String>>();
+		int n = (l.size()-set_size+1);
+		for(int i=0;i<n;i++)
+		{
+			String start = l.get(i);
+			for(int j=i+1;j<n+1;j++)
+			{
+				LinkedList<String> subset = new LinkedList<String>();
+				subset.add(start);
+				for(int k=j;k<j+set_size-1;k++)
+				{
+					subset.add(l.get(k));
+				}
+				if(!contains(all_subsets,subset))
+					all_subsets.add(subset);
+			}
+		}
+		System.out.println(all_subsets);
+		return all_subsets;
+	}
+	
+	static boolean checkSubsets(LinkedList<String> l, String item)
 	{
 		for(int i=0 ; i < l.size()/2 +1 ; i++)
 		{
-			for(int j=0;j<)
+			LinkedList<LinkedList<String>> subsets = getSubsets(l,i);
+			for(int j=0;j<l.size();j++)
+			{
+				
+			}
 		}
 		return false;
 	}
@@ -70,10 +116,14 @@ public class Apriori
 		for(int i =0;i<m.size();i++)
 		{
 			String item = m.get(i);
-			if( checkSubSets(l,item))
+			if( checkSubsets(l,item))
 				return null;
-			if(!l.contains(m) &&)
+			if(!l.contains(m))
+			{
+				
+			}
 		}
+		return l;
 	}
 	
 	static void getCandidateItems(double min_support)
