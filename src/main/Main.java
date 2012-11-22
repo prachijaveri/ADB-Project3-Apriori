@@ -15,7 +15,24 @@ public class Main
 			Apriori.start(all_transactions,min_support, min_confidence);
 			System.out.println("APRIORI DONE");
 //			Apriori.printAllItems();
-			
+//			LinkedList<String> l =new LinkedList<String>();
+//			l.add("a");
+//			l.add("b");
+//			l.add("c");
+//			l.add("d");
+//			l.add("e");
+//			l.add("f");
+//			l.add("g");
+//			l.add("h");
+//			l.add("i");
+//			l.add("j");
+//			l.add("k");
+//			l.add("l");
+//			l.add("m");
+//			l.add("n");
+//			System.out.println(l);
+//			System.out.println();
+//			Apriori.getSubsets(l, 5);
 //			AssociationRule r = new AssociationRule("hello" , "watever");
 //			r.addToLeft("gdsf");
 //			r.addToLeft("dsfgtrg");
